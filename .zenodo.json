@@ -1,0 +1,25 @@
+{
+  "creators": [
+    {
+      "name": "Tqemaladze, Jaba",
+      "orcid": "0000-0001-8651-7243",
+      "affiliation": "Georgia Longevity Alliance"
+    }
+  ],
+  "title": "Iron Bioavailability from Sprouted Wheat — Factorial Analysis Code",
+  "description": "Reproducible statistical analysis pipeline (2x4x2 factorial design, power analysis, ANOVA/ANCOVA with phytic-acid and polyphenol covariates) for a study on iron bioavailability from sprouted wheat. Planning code, not experimental data.",
+  "keywords": [
+    "iron bioavailability",
+    "Caco-2",
+    "phytic acid",
+    "polyphenols",
+    "factorial design",
+    "sprouted wheat",
+    "ANOVA",
+    "research reproducibility"
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "related_identifiers": []
+}

@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Iron Bioavailability from Sprouted Wheat — Factorial Analysis Code"
+authors:
+  - family-names: Tqemaladze
+    given-names: Jaba
+    orcid: "https://orcid.org/0000-0001-8651-7243"
+keywords:
+  - iron bioavailability
+  - Caco-2
+  - factorial design
+  - phytic acid
+  - polyphenols
+  - reproducibility
+license: MIT
+date-released: "2026-08-28"

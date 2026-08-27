@@ -1,0 +1,277 @@
+{
+  "design": {
+    "structure": "2x4x2",
+    "n2_levels": [
+      "air",
+      "N2"
+    ],
+    "citrate_levels": [
+      "0",
+      "low",
+      "mid",
+      "high"
+    ],
+    "bile_levels": [
+      "porcine",
+      "optimised"
+    ],
+    "replicates": 4,
+    "total_conditions": 16,
+    "n_observations": 64
+  },
+  "planning_assumptions": {
+    "mu_baseline_ng_mg": 100.0,
+    "effect_N2": 26.0,
+    "effect_best_citrate": 20.0,
+    "effect_best_bile": 12.0,
+    "interact_N2_citrate": 13.0,
+    "sd": 25.0,
+    "note": "Planning values for power/simulation only; not measured data."
+  },
+  "cell_means": [
+    {
+      "N2": "N2",
+      "citrate": "0",
+      "bile": "optimised",
+      "mean": 121.6,
+      "std": 19.7,
+      "n": 4
+    },
+    {
+      "N2": "N2",
+      "citrate": "0",
+      "bile": "porcine",
+      "mean": 140.9,
+      "std": 27.4,
+      "n": 4
+    },
+    {
+      "N2": "N2",
+      "citrate": "high",
+      "bile": "optimised",
+      "mean": 149.4,
+      "std": 27.4,
+      "n": 4
+    },
+    {
+      "N2": "N2",
+      "citrate": "high",
+      "bile": "porcine",
+      "mean": 155.0,
+      "std": 19.9,
+      "n": 4
+    },
+    {
+      "N2": "N2",
+      "citrate": "low",
+      "bile": "optimised",
+      "mean": 129.8,
+      "std": 22.4,
+      "n": 4
+    },
+    {
+      "N2": "N2",
+      "citrate": "low",
+      "bile": "porcine",
+      "mean": 173.3,
+      "std": 42.8,
+      "n": 4
+    },
+    {
+      "N2": "N2",
+      "citrate": "mid",
+      "bile": "optimised",
+      "mean": 199.1,
+      "std": 28.3,
+      "n": 4
+    },
+    {
+      "N2": "N2",
+      "citrate": "mid",
+      "bile": "porcine",
+      "mean": 151.5,
+      "std": 14.8,
+      "n": 4
+    },
+    {
+      "N2": "air",
+      "citrate": "0",
+      "bile": "optimised",
+      "mean": 128.2,
+      "std": 37.4,
+      "n": 4
+    },
+    {
+      "N2": "air",
+      "citrate": "0",
+      "bile": "porcine",
+      "mean": 109.4,
+      "std": 27.7,
+      "n": 4
+    },
+    {
+      "N2": "air",
+      "citrate": "high",
+      "bile": "optimised",
+      "mean": 132.6,
+      "std": 16.5,
+      "n": 4
+    },
+    {
+      "N2": "air",
+      "citrate": "high",
+      "bile": "porcine",
+      "mean": 140.0,
+      "std": 27.0,
+      "n": 4
+    },
+    {
+      "N2": "air",
+      "citrate": "low",
+      "bile": "optimised",
+      "mean": 124.1,
+      "std": 18.2,
+      "n": 4
+    },
+    {
+      "N2": "air",
+      "citrate": "low",
+      "bile": "porcine",
+      "mean": 131.2,
+      "std": 27.9,
+      "n": 4
+    },
+    {
+      "N2": "air",
+      "citrate": "mid",
+      "bile": "optimised",
+      "mean": 131.0,
+      "std": 19.9,
+      "n": 4
+    },
+    {
+      "N2": "air",
+      "citrate": "mid",
+      "bile": "porcine",
+      "mean": 134.3,
+      "std": 16.3,
+      "n": 4
+    }
+  ],
+  "anova": {
+    "model_r2": 0.3392,
+    "df_resid": 52,
+    "ms_residual": 761.6,
+    "terms": {
+      "N2": {
+        "F": 11.847,
+        "df1": 1,
+        "df2": 52,
+        "p": 0.0011
+      },
+      "citrate": {
+        "F": 4.269,
+        "df1": 2,
+        "df2": 52,
+        "p": 0.0192
+      },
+      "citrate_linear": {
+        "F": 5.441,
+        "df1": 1,
+        "df2": 52,
+        "p": 0.0236
+      },
+      "citrate_quadratic": {
+        "F": 3.097,
+        "df1": 1,
+        "df2": 52,
+        "p": 0.0843
+      },
+      "bile": {
+        "F": 0.127,
+        "df1": 1,
+        "df2": 52,
+        "p": 0.7229
+      },
+      "N2 x citrate": {
+        "F": 1.068,
+        "df1": 2,
+        "df2": 52,
+        "p": 0.351
+      },
+      "N2 x bile": {
+        "F": 0.154,
+        "df1": 1,
+        "df2": 52,
+        "p": 0.6968
+      },
+      "citrate x bile": {
+        "F": 0.118,
+        "df1": 2,
+        "df2": 52,
+        "p": 0.8888
+      },
+      "N2 x citrate x bile": {
+        "F": 1.828,
+        "df1": 2,
+        "df2": 52,
+        "p": 0.1709
+      }
+    }
+  },
+  "ancova": {
+    "model_r2": 0.3673,
+    "df_resid": 50,
+    "N2": {
+      "F": 12.115,
+      "df1": 1,
+      "df2": 50,
+      "p": 0.001
+    },
+    "citrate": {
+      "F": 4.252,
+      "df1": 2,
+      "df2": 50,
+      "p": 0.0197
+    },
+    "bile": {
+      "F": 0.033,
+      "df1": 1,
+      "df2": 50,
+      "p": 0.8575
+    },
+    "N2 x citrate": {
+      "F": 0.54,
+      "df1": 2,
+      "df2": 50,
+      "p": 0.586
+    },
+    "phytate": {
+      "F": 1.26,
+      "df1": 1,
+      "df2": 50,
+      "p": 0.2671
+    },
+    "polyphenols": {
+      "F": 0.723,
+      "df1": 1,
+      "df2": 50,
+      "p": 0.3991
+    },
+    "coef_phytate": 0.566,
+    "coef_polyphenols": -0.6901
+  },
+  "assumptions": {
+    "shapiro_W": 0.9875,
+    "shapiro_p": 0.7652,
+    "levene_stat": 0.9634,
+    "levene_p": 0.5058
+  },
+  "power": {
+    "n_sim": 400,
+    "alpha": 0.05,
+    "power_N2_main": 0.998,
+    "power_N2xCitrate": 0.117
+  },
+  "seed_note": "Simulation is illustrative (planned effect model). Assumptions tests report the full-model residuals."
+}
