@@ -1,277 +1,316 @@
 {
+  "version": "1.1.0",
   "design": {
-    "structure": "2x4x2",
+    "structure": "2x4x2 + ascorbate benchmark",
     "n2_levels": [
       "air",
       "N2"
     ],
-    "citrate_levels": [
-      "0",
-      "low",
-      "mid",
-      "high"
+    "citrate_doses_mM": [
+      0.0,
+      2.0,
+      5.0,
+      10.0
     ],
     "bile_levels": [
-      "porcine",
+      "standard",
       "optimised"
     ],
-    "replicates": 4,
-    "total_conditions": 16,
-    "n_observations": 64
+    "ascorbate_benchmark_mM": 1.0,
+    "replicates": 12,
+    "n_factorial_conditions": 16,
+    "n_benchmark_conditions": 1,
+    "total_conditions": 17,
+    "n_observations": 204,
+    "note": "16 factorial + 1 ascorbate benchmark, 12 true replicates each = 204 obs"
   },
   "planning_assumptions": {
-    "mu_baseline_ng_mg": 100.0,
+    "mu_baseline": 100.0,
     "effect_N2": 26.0,
     "effect_best_citrate": 20.0,
     "effect_best_bile": 12.0,
     "interact_N2_citrate": 13.0,
+    "ascorbate_shift": 46.0,
     "sd": 25.0,
     "note": "Planning values for power/simulation only; not measured data."
   },
-  "cell_means": [
+  "factorial_cell_means": [
     {
       "N2": "N2",
       "citrate": "0",
       "bile": "optimised",
-      "mean": 121.6,
-      "std": 19.7,
-      "n": 4
+      "mean": 141.5,
+      "std": 26.9,
+      "count": 12
     },
     {
       "N2": "N2",
       "citrate": "0",
-      "bile": "porcine",
-      "mean": 140.9,
-      "std": 27.4,
-      "n": 4
+      "bile": "standard",
+      "mean": 115.9,
+      "std": 26.9,
+      "count": 12
     },
     {
       "N2": "N2",
-      "citrate": "high",
+      "citrate": "10",
       "bile": "optimised",
-      "mean": 149.4,
-      "std": 27.4,
-      "n": 4
+      "mean": 155.7,
+      "std": 27.1,
+      "count": 12
     },
     {
       "N2": "N2",
-      "citrate": "high",
-      "bile": "porcine",
-      "mean": 155.0,
-      "std": 19.9,
-      "n": 4
+      "citrate": "10",
+      "bile": "standard",
+      "mean": 148.6,
+      "std": 28.6,
+      "count": 12
     },
     {
       "N2": "N2",
-      "citrate": "low",
+      "citrate": "2",
       "bile": "optimised",
-      "mean": 129.8,
-      "std": 22.4,
-      "n": 4
+      "mean": 145.8,
+      "std": 21.1,
+      "count": 12
     },
     {
       "N2": "N2",
-      "citrate": "low",
-      "bile": "porcine",
-      "mean": 173.3,
-      "std": 42.8,
-      "n": 4
+      "citrate": "2",
+      "bile": "standard",
+      "mean": 124.2,
+      "std": 23.8,
+      "count": 12
     },
     {
       "N2": "N2",
-      "citrate": "mid",
+      "citrate": "5",
       "bile": "optimised",
-      "mean": 199.1,
-      "std": 28.3,
-      "n": 4
+      "mean": 173.2,
+      "std": 27.6,
+      "count": 12
     },
     {
       "N2": "N2",
-      "citrate": "mid",
-      "bile": "porcine",
-      "mean": 151.5,
-      "std": 14.8,
-      "n": 4
+      "citrate": "5",
+      "bile": "standard",
+      "mean": 158.8,
+      "std": 23.1,
+      "count": 12
     },
     {
       "N2": "air",
       "citrate": "0",
       "bile": "optimised",
-      "mean": 128.2,
-      "std": 37.4,
-      "n": 4
+      "mean": 103.1,
+      "std": 20.3,
+      "count": 12
     },
     {
       "N2": "air",
       "citrate": "0",
-      "bile": "porcine",
-      "mean": 109.4,
-      "std": 27.7,
-      "n": 4
+      "bile": "standard",
+      "mean": 92.6,
+      "std": 18.4,
+      "count": 12
     },
     {
       "N2": "air",
-      "citrate": "high",
+      "citrate": "10",
       "bile": "optimised",
-      "mean": 132.6,
-      "std": 16.5,
-      "n": 4
+      "mean": 112.2,
+      "std": 18.0,
+      "count": 12
     },
     {
       "N2": "air",
-      "citrate": "high",
-      "bile": "porcine",
-      "mean": 140.0,
-      "std": 27.0,
-      "n": 4
+      "citrate": "10",
+      "bile": "standard",
+      "mean": 90.1,
+      "std": 18.1,
+      "count": 12
     },
     {
       "N2": "air",
-      "citrate": "low",
+      "citrate": "2",
       "bile": "optimised",
-      "mean": 124.1,
-      "std": 18.2,
-      "n": 4
+      "mean": 127.2,
+      "std": 18.5,
+      "count": 12
     },
     {
       "N2": "air",
-      "citrate": "low",
-      "bile": "porcine",
-      "mean": 131.2,
-      "std": 27.9,
-      "n": 4
+      "citrate": "2",
+      "bile": "standard",
+      "mean": 109.3,
+      "std": 16.6,
+      "count": 12
     },
     {
       "N2": "air",
-      "citrate": "mid",
+      "citrate": "5",
       "bile": "optimised",
-      "mean": 131.0,
-      "std": 19.9,
-      "n": 4
+      "mean": 140.3,
+      "std": 25.1,
+      "count": 12
     },
     {
       "N2": "air",
-      "citrate": "mid",
-      "bile": "porcine",
-      "mean": 134.3,
-      "std": 16.3,
-      "n": 4
+      "citrate": "5",
+      "bile": "standard",
+      "mean": 121.0,
+      "std": 20.0,
+      "count": 12
     }
   ],
+  "ascorbate_benchmark_ferritin": {
+    "n": 12,
+    "mean": 140.2,
+    "sd": 23.8
+  },
   "anova": {
-    "model_r2": 0.3392,
-    "df_resid": 52,
-    "ms_residual": 761.6,
+    "model_r2": 0.5226,
+    "df_resid": 180,
     "terms": {
       "N2": {
-        "F": 11.847,
+        "F": 101.855,
         "df1": 1,
-        "df2": 52,
-        "p": 0.0011
+        "df2": 180,
+        "p": 0.0
       },
       "citrate": {
-        "F": 4.269,
+        "F": 27.149,
         "df1": 2,
-        "df2": 52,
-        "p": 0.0192
+        "df2": 180,
+        "p": 0.0
       },
       "citrate_linear": {
-        "F": 5.441,
+        "F": 8.563,
         "df1": 1,
-        "df2": 52,
-        "p": 0.0236
+        "df2": 180,
+        "p": 0.0039
       },
       "citrate_quadratic": {
-        "F": 3.097,
+        "F": 45.735,
         "df1": 1,
-        "df2": 52,
-        "p": 0.0843
+        "df2": 180,
+        "p": 0.0
       },
       "bile": {
-        "F": 0.127,
+        "F": 27.217,
         "df1": 1,
-        "df2": 52,
-        "p": 0.7229
+        "df2": 180,
+        "p": 0.0
       },
       "N2 x citrate": {
-        "F": 1.068,
+        "F": 5.312,
         "df1": 2,
-        "df2": 52,
-        "p": 0.351
+        "df2": 180,
+        "p": 0.0057
       },
       "N2 x bile": {
-        "F": 0.154,
+        "F": 0.002,
         "df1": 1,
-        "df2": 52,
-        "p": 0.6968
+        "df2": 180,
+        "p": 0.9665
       },
       "citrate x bile": {
-        "F": 0.118,
+        "F": 0.129,
         "df1": 2,
-        "df2": 52,
-        "p": 0.8888
+        "df2": 180,
+        "p": 0.879
       },
       "N2 x citrate x bile": {
-        "F": 1.828,
+        "F": 1.384,
         "df1": 2,
-        "df2": 52,
-        "p": 0.1709
+        "df2": 180,
+        "p": 0.2533
       }
-    }
+    },
+    "n_factorial": 192
   },
   "ancova": {
-    "model_r2": 0.3673,
-    "df_resid": 50,
+    "model_r2": 0.5797,
     "N2": {
-      "F": 12.115,
-      "df1": 1,
-      "df2": 50,
-      "p": 0.001
+      "F": 117.5,
+      "p": 0.0
     },
     "citrate": {
-      "F": 4.252,
-      "df1": 2,
-      "df2": 50,
-      "p": 0.0197
+      "F": 30.468,
+      "p": 0.0
     },
     "bile": {
-      "F": 0.033,
-      "df1": 1,
-      "df2": 50,
-      "p": 0.8575
+      "F": 22.925,
+      "p": 0.0
     },
     "N2 x citrate": {
-      "F": 0.54,
-      "df1": 2,
-      "df2": 50,
-      "p": 0.586
+      "F": 3.706,
+      "p": 0.0265
     },
     "phytate": {
-      "F": 1.26,
-      "df1": 1,
-      "df2": 50,
-      "p": 0.2671
+      "F": 16.408,
+      "p": 0.0001
     },
     "polyphenols": {
-      "F": 0.723,
-      "df1": 1,
-      "df2": 50,
-      "p": 0.3991
+      "F": 6.748,
+      "p": 0.0102
     },
-    "coef_phytate": 0.566,
-    "coef_polyphenols": -0.6901
+    "lox": {
+      "F": 0.009,
+      "p": 0.9242
+    },
+    "ppo": {
+      "F": 0.394,
+      "p": 0.5308
+    },
+    "coef_phytate": -0.8032,
+    "coef_polyphenols": -0.8689,
+    "coef_lox": -0.0317,
+    "coef_ppo": 0.3355
+  },
+  "fe2_ratio": {
+    "by_n2": {
+      "N2": {
+        "mean": 77.5,
+        "std": 3.9,
+        "count": 96
+      },
+      "air": {
+        "mean": 42.4,
+        "std": 4.1,
+        "count": 96
+      }
+    },
+    "ttest_p": 0.0
+  },
+  "h8_dmt1_dcytb": {
+    "by_bile": {
+      "optimised": {
+        "mean": 1.29,
+        "std": 0.09,
+        "count": 96
+      },
+      "standard": {
+        "mean": 1.0,
+        "std": 0.1,
+        "count": 96
+      }
+    },
+    "ttest_p": 0.0
   },
   "assumptions": {
-    "shapiro_W": 0.9875,
-    "shapiro_p": 0.7652,
-    "levene_stat": 0.9634,
-    "levene_p": 0.5058
+    "shapiro_W": 0.9957,
+    "shapiro_p": 0.8668,
+    "levene_stat": 0.4359,
+    "levene_p": 0.9665
   },
   "power": {
-    "n_sim": 400,
     "alpha": 0.05,
-    "power_N2_main": 0.998,
-    "power_N2xCitrate": 0.117
+    "n_sim": 300,
+    "N2": 1.0,
+    "N2xCitrate": 0.27,
+    "bile_H8": 1.0
   },
-  "seed_note": "Simulation is illustrative (planned effect model). Assumptions tests report the full-model residuals."
+  "note": "Fe2+, DMT1/DCYTB and ascorbate-relative ferritin are illustrative planning parameters."
 }

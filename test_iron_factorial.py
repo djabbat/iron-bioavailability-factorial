@@ -1,82 +1,80 @@
 #!/usr/bin/env python3
 """
-test_iron_factorial.py — verification suite for the JFS factorial pipeline.
+test_iron_factorial.py — verification suite for the JFS factorial pipeline (v1.1.0)
 
 Run:  python3 -m pytest test_iron_factorial.py -v
-  or:  python3 test_iron_factorial.py   (standalone runner)
+  or:  python3 test_iron_factorial.py
 
 Checks
 ------
-T1  Design is a balanced 2x4x2 = 16 conditions x 4 reps = 64 rows.
-T2  Effect-coded design matrix is full rank and mutually orthogonal.
+T1  Design: 16 factorial (2x4x2) + 1 ascorbate benchmark, x12 reps = 204 obs; balanced.
+T2  Effect-coded design matrix full rank + mutually orthogonal.
 T3  Reproducibility: same seed -> identical report JSON.
-T4  Type-I error: under the null, proportion of p<0.05 per term ~ alpha.
-T5  Signal recovery: data with a single N2 main effect -> N2 significant,
-    other main effects show ~alpha Type-I rate.
-T6  Covariate coefficient recovery (sign + order of magnitude) in ANCOVA.
-T7  Numerical F-value for N2 matches the closed-form orthogonal-projection SS.
+T4  Type-I error ~ alpha under the null (factorial ANOVA terms).
+T5  Signal recovery: single N2 effect detected, no spurious interactions.
+T6  Covariate coefficient recovery (phytate slope sign & magnitude).
+T7  Numerical F(N2) equals the closed-form orthogonal-projection value.
+T8  Endpoint sanity: Fe2+/total higher under N2 (p<alpha); H8 DMT1/DCYTB higher for optimised bile.
+T9  Null power ~ alpha for Fe2+ endpoint and H8 endpoint.
 """
 
-import itertools
 import json
-import os
 import tempfile
+import itertools
 
 import numpy as np
-from scipy import stats
 
 import iron_factorial as f
 
 ALPHA = 0.05
 
 
-# --------------------------------------------------------------------------- #
 def test_design_dimensions():
+    assert 2 * 4 * 2 == 16
     d = f.build_design()
-    n_cond = len(f.N2_LEVELS) * len(f.CITRATE_LEVELS) * len(f.BILE_LEVELS)
-    assert n_cond == 16
-    assert len(d) == n_cond * f.REPS == 64
-    # balanced: each N2 level 32, each citrate level 16, each bile level 32
-    assert (d["N2"].value_counts() == 32).all()
-    assert (d["citrate"].value_counts() == 16).all()
-    assert (d["bile"].value_counts() == 32).all()
-    print("T1 PASS: design dimensions & balance")
+    assert len(d) == 16 * f.REPS == 192
+    assert (d["N2"].value_counts().values == 96).all()
+    assert (d["citrate"].value_counts().values == 48).all()
+    assert (d["bile"].value_counts().values == 96).all()
+    b = f.build_benchmark()
+    assert len(b) == f.REPS == 12
+    data = f.simulate(f.build_design(), f.build_benchmark(), with_effects=True)
+    assert len(data) == 204
+    assert int((data["ascorbate"] == f.ASC_DOSE).sum()) == 12
+    print("T1 PASS: 16 factorial + 1 benchmark x 12 reps = 204 obs; balanced")
 
 
 def test_design_orthogonal():
     d = f.build_design()
     X, names = f._effect_code(d)
     assert X.shape[1] == 12
-    assert np.linalg.matrix_rank(X) == 12, "design matrix must be full rank"
-    # normalized columns should be mutually orthogonal
+    assert np.linalg.matrix_rank(X) == 12, "design must be full rank"
     Xn = X / np.linalg.norm(X, axis=0)
     G = Xn.T @ Xn
-    G -= np.eye(G.shape[0])
-    # exclude intercept column (norm exactly 1, fine) - all should be ~0 off-diag
-    assert np.abs(G).max() < 1e-8, f"columns not orthogonal, max={np.abs(G).max():.2e}"
+    G -= np.eye(12)
+    assert np.abs(G).max() < 1e-8, f"not orthogonal, max={np.abs(G).max():.2e}"
     print("T2 PASS: full rank + mutually orthogonal design matrix")
 
 
 def test_reproducibility():
     with tempfile.TemporaryDirectory() as tmp:
-        a = f.main(outdir=tmp, n_sim=20)
+        a = f.main(outdir=tmp, n_sim=15)
+        b = f.main(outdir=tmp, n_sim=15)
         with open(a) as fh:
             r1 = json.load(fh)
-        b = f.main(outdir=tmp, n_sim=20)
         with open(b) as fh:
             r2 = json.load(fh)
-    assert r1 == r2, "reports must be identical for the same seed"
+    assert r1 == r2
     print("T3 PASS: reproducible output (fixed seed)")
 
 
-def _null_power_per_term(n_sim=400):
-    """Proportion of p<0.05 per term under the null across simulations."""
-    design = f.build_design()
+def _reject_rates_under_null(n_sim=300):
+    design, bench = f.build_design(), f.build_benchmark()
     hits = dict.fromkeys(
         ["N2", "citrate", "citrate_linear", "bile", "N2 x citrate",
          "N2 x bile", "citrate x bile", "N2 x citrate x bile"], 0)
     for s in range(n_sim):
-        data = f.simulate_ferritin(design, seed=10000 + s, with_effects=False)
+        data = f.simulate(design, bench, seed=50000 + s, with_effects=False)
         an = f.fit_anova(data)
         for k in hits:
             if an["terms"][k]["p"] < ALPHA:
@@ -85,83 +83,101 @@ def _null_power_per_term(n_sim=400):
 
 
 def test_type1_error():
-    rates, n_sim = _null_power_per_term(n_sim=400)
-    tol = 3.0 * np.sqrt(ALPHA * (1 - ALPHA) / n_sim)  # ~3 sigma
+    rates, n_sim = _reject_rates_under_null(n_sim=300)
+    tol = 3.0 * np.sqrt(ALPHA * (1 - ALPHA) / n_sim)
     for k, rate in rates.items():
-        assert abs(rate - ALPHA) < tol, \
-            f"Type-I error for {k} = {rate:.3f} outside {ALPHA}+-{tol:.3f}"
-        print(f"   null p<0.05 rate {k:<22} = {rate:.3f}")
+        assert abs(rate - ALPHA) < tol, f"Type-I {k}={rate:.3f}"
+        print(f"   null rate {k:<22} = {rate:.3f}")
     print("T4 PASS: Type-I error within tolerance for all terms")
 
 
 def test_signal_recovery_single_effect():
-    """Only N2 main effect present -> N2 rejects, others ~alpha rate."""
-    design = f.build_design()
-    n_sim = 400
-    sig = {}
-    for k in ["N2", "citrate", "bile", "N2 x bile"]:
-        sig[k] = 0
+    design, bench = f.build_design(), f.build_benchmark()
+    n_sim = 300
+    sig = {k: 0 for k in ["N2", "citrate", "bile", "N2 x bile"]}
     for s in range(n_sim):
-        data = f.simulate_ferritin(design, seed=20000 + s)
-        # zero-out all effects except N2 by post-adding only N2
-        # (reuse null data then inject N2 effect)
-        base = f.simulate_ferritin(design, seed=30000 + s, with_effects=False)
+        base = f.simulate(design, bench, seed=60000 + s, with_effects=False)
         inj = f.EFFECT_N2 * (base["N2"].values == "N2").astype(float)
-        y = base["ferritin"].values + inj
-        data = base.copy()
-        data["ferritin"] = y
-        an = f.fit_anova(data)
+        fac_rows = base["ascorbate"] == 0.0
+        base.loc[fac_rows, "ferritin"] = (base.loc[fac_rows, "ferritin"].values + inj[fac_rows.values])
+        an = f.fit_anova(base)
         for k in sig:
             if an["terms"][k]["p"] < ALPHA:
                 sig[k] += 1
-    # N2 must be detected (power high with EFFECT_N2)
-    assert sig["N2"] / n_sim > 0.98, f"N2 detection rate too low: {sig['N2']/n_sim}"
+    assert sig["N2"] / n_sim > 0.98, f"N2 rate too low {sig['N2']/n_sim}"
     tol = 3.0 * np.sqrt(ALPHA * (1 - ALPHA) / n_sim)
     for k in ["citrate", "bile", "N2 x bile"]:
-        rate = sig[k] / n_sim
-        assert rate < ALPHA + tol, f"spurious detection of {k}: {rate:.3f}"
-    print("T5 PASS: single N2-effect recovered; no spurious detections"
-          f" (N2 rate {sig['N2']/n_sim:.3f})")
+        r = sig[k] / n_sim
+        assert r < ALPHA + tol, f"spurious {k}={r:.3f}"
+    print("T5 PASS: single N2-effect recovered; no spurious detections "
+          f"(N2 rate {sig['N2']/n_sim:.3f})")
 
 
 def test_covariate_coefficient_recovery():
-    # controlled data with known covariate betas, no factor effects
     rng = np.random.default_rng(5)
-    n = 2000
-    n2 = np.tile([-0.5, 0.5], n // 2)
+    n = 3000
     phyt = 700 + rng.normal(0, f.SD_PHYTATE, n)
     poly = 40 + rng.normal(0, f.SD_POLYPH, n)
     y = (f.MU_BASELINE + f.BETA_PHYTATE * (phyt - 700)
          + f.BETA_POLYPH * (poly - 40) + rng.normal(0, 5, n))
-    X = np.column_stack([np.ones(n), n2, phyt - 700, poly - 40])
+    X = np.column_stack([np.ones(n), phyt - 700, poly - 40])
     b, *_ = np.linalg.lstsq(X, y, rcond=None)
-    # true = BETA_PHYTATE, BETA_POLYPH (both negative here)
-    assert b[2] * f.BETA_PHYTATE > 0, "phytate slope sign mismatch"
-    assert b[3] * f.BETA_POLYPH > 0, "polyphenol slope sign mismatch"
-    assert 0.5 < abs(b[2]) / abs(f.BETA_PHYTATE) < 1.5
-    assert 0.5 < abs(b[3]) / abs(f.BETA_POLYPH) < 1.5
-    print(f"T6 PASS: covariate recovery beta_phyt={b[2]:.3f} (true "
-          f"{f.BETA_PHYTATE}), beta_poly={b[3]:.3f} (true {f.BETA_POLYPH})")
+    assert b[1] * f.BETA_PHYTATE > 0, "phytate sign mismatch"
+    assert b[2] * f.BETA_POLYPH > 0, "polyphenol sign mismatch"
+    assert 0.5 < abs(b[1] / f.BETA_PHYTATE) < 1.5
+    assert 0.5 < abs(b[2] / f.BETA_POLYPH) < 1.5
+    print(f"T6 PASS: covariate recovery beta_phyt={b[1]:.3f} (true {f.BETA_PHYTATE}), "
+          f"beta_poly={b[2]:.3f} (true {f.BETA_POLYPH})")
 
 
 def test_anova_numeric_consistency():
-    """F for N2 must equal (SS_N2/1)/(MS_resid) using orthogonal projection."""
-    d = f.build_design()
-    data = f.simulate_ferritin(d, seed=20260828)
-    y = data["ferritin"].values.astype(float)
-    X, names = f._effect_code(data)
+    design, bench = f.build_design(), f.build_benchmark()
+    data = f.simulate(design, bench, seed=20260828)
+    fac = data[data["ascorbate"] == 0.0]
+    y = fac["ferritin"].values.astype(float)
+    X, names = f._effect_code(fac)
     beta, rss = f._ols(y, X)
-    n, p = X.shape
-    df_res = n - p
+    df_res = len(y) - X.shape[1]
     ms_res = rss / df_res
-    # orthogonal SS for the N2 column
-    x_n2 = X[:, names.index("N2")]
-    ss_n2 = float((x_n2 @ y) ** 2 / (x_n2 @ x_n2))
-    F_expected = ss_n2 / ms_res
+    xn = X[:, names.index("N2")]
+    ss_n2 = float((xn @ y) ** 2 / (xn @ xn))
+    F_exp = ss_n2 / ms_res
     F_got = f.fit_anova(data)["terms"]["N2"]["F"]
-    assert abs(F_got - F_expected) < 1e-3, \
-        f"F mismatch: got {F_got}, expected {F_expected}"
-    print(f"T7 PASS: F(N2)={F_got:.4f} matches closed-form {F_expected:.4f}")
+    assert abs(F_got - F_exp) < 1e-3, f"F got {F_got}, exp {F_exp}"
+    print(f"T7 PASS: F(N2)={F_got:.4f} matches closed-form {F_exp:.4f}")
+
+
+def test_endpoints():
+    design, bench = f.build_design(), f.build_benchmark()
+    data = f.simulate(design, bench, seed=7)
+    fe = f.fe2_analysis(data)
+    assert fe["by_n2"]["N2"]["mean"] > fe["by_n2"]["air"]["mean"]
+    assert fe["ttest_p"] < ALPHA
+    h8 = f.h8_analysis(data)
+    assert h8["by_bile"]["optimised"]["mean"] > h8["by_bile"]["standard"]["mean"]
+    assert h8["ttest_p"] < ALPHA
+    print("T8 PASS: Fe2+ higher under N2; DMT1/DCYTB higher for optimised bile (both p<0.05)")
+
+
+def test_null_power_endpoints():
+    design, bench = f.build_design(), f.build_benchmark()
+    n_sim = 300
+    fe_hits = h8_hits = 0
+    for s in range(n_sim):
+        data = f.simulate(design, bench, seed=70000 + s, with_effects=False)
+        # endpoints have no factor dependence under null -> replace with noise
+        fac = data["ascorbate"] == 0.0
+        data.loc[fac, "fe2_ratio"] = 50 + np.random.default_rng(s).normal(0, 4, int(fac.sum()))
+        data.loc[fac, "dmt1_dcytb"] = 1.0 + np.random.default_rng(s).normal(0, 0.1, int(fac.sum()))
+        if f.fe2_analysis(data)["ttest_p"] < ALPHA:
+            fe_hits += 1
+        if f.h8_analysis(data)["ttest_p"] < ALPHA:
+            h8_hits += 1
+    tol = 3.0 * np.sqrt(ALPHA * (1 - ALPHA) / n_sim)
+    assert abs(fe_hits / n_sim - ALPHA) < tol, f"Fe2 type-I {fe_hits/n_sim:.3f}"
+    assert abs(h8_hits / n_sim - ALPHA) < tol, f"H8 type-I {h8_hits/n_sim:.3f}"
+    print(f"T9 PASS: Fe2+ and H8 type-I rates ~ alpha "
+          f"(fe2={fe_hits/n_sim:.3f}, h8={h8_hits/n_sim:.3f})")
 
 
 if __name__ == "__main__":

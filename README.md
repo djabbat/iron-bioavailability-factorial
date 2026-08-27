@@ -13,9 +13,12 @@ Tqemaladze, J. *Iron Bioavailability from Sprouted Wheat: A Factorial
 Experimental Design Testing Nitrogen-Atmosphere Drying, Citrate Chelation, and
 Bile Salt Composition.* Journal of Food Science (submitted).
 
+## Version
+**v1.1.0** (2026-08-28) — design-matched to the submitted manuscript: **17 conditions (16 factorial + ascorbate internal benchmark) x 12 true replicates = 204 observations**, real citrate doses (0/2/5/10 mM) with orthogonal polynomial contrasts for the unequally spaced doses, plus Fe2+/total iron ratio and DMT1/DCYTB (H8) endpoints.
+
 ## What this code does
 - Builds the full orthogonal **2×4×2 factorial design** (nitrogen drying ×
-  citrate dose × bile salt) = 16 conditions × 4 true replicates = 64 observations.
+  citrate dose × bile salt) = 16 factorial conditions (2x4x2) + 1 ascorbate benchmark, 12 true replicates each = 204 observations.
 - Computes **Monte-Carlo statistical power** for the primary (N₂) effect and the
   N₂×citrate interaction at α = 0.05.
 - Simulates Caco-2 ferritin data under a pre-registered planning model (with
