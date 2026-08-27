@@ -1,5 +1,7 @@
 # Iron Bioavailability from Sprouted Wheat — Factorial Analysis Code
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22132938.svg)](https://doi.org/10.5281/zenodo.22132938)
+
 Open-source analysis pipeline for the factorial experimental design (2×4×2) on
 iron bioavailability from sprouted wheat, submitted to the *Journal of Food
 Science* (ScholarOne submission). This repository contains the reproducible
