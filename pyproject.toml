@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iron-bioavailability-factorial"
+version = "0.1.1"
+description = "Iron bioavailability from sprouted wheat: reproducible 2x4x2 factorial design, power analysis and ANOVA/ANCOVA pipeline (JFS)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Jaba Tqemaladze", orcid = "0000-0001-8651-7243" }]
+keywords = ["iron-bioavailability", "factorial-design", "anova", "ancova", "food-science"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+]
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+]
+
+[project.scripts]
+iron-factorial = "iron_factorial:main"
+
+[tool.setuptools]
+py-modules = ["iron_factorial"]
