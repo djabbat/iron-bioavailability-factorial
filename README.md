@@ -1,5 +1,7 @@
 # Iron Bioavailability from Sprouted Wheat — Factorial Analysis Code
 
+[![XERJ Corpus Hub contributor](https://hub.xerj.org/contributors/djabbat/badge.svg)](https://hub.xerj.org/contributors/djabbat)
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23405624.svg)](https://doi.org/10.5281/zenodo.23405624)
 
 Open-source analysis pipeline for the factorial experimental design (2×4×2) on
